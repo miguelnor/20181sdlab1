@@ -21,9 +21,8 @@ public class Main {
 
         logger.info("Server address: " + IPAddress + ":" + port);
 
-        String teste = "0 55 miguel";
-
-        byte[] sendData = new byte[1480];
+        String teste = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+        byte[] sendData;
 
         sendData = teste.getBytes();
 
@@ -31,9 +30,13 @@ public class Main {
 
         DatagramPacket sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 
-        clientSocket.send(sendPackage);
-        logger.info("Enviado: " + teste);
-        logger.info("Tamanho: " + teste.length());
+
+        for(int i =0; i<10 ; i++) {
+            clientSocket.send(sendPackage);
+
+            logger.info("Enviado: " + teste);
+            logger.info("Tamanho: " + teste.length());
+        }
 
         for (int i = 0; i < 4; i++) {
             new ThreadResults("Thread " + i).start();

@@ -22,7 +22,7 @@ public class Server {
             while(true) {
                 DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
                 serverSocket.receive(receivedPacket);
-                String data = new String(receivedPacket.getData());
+                String data = new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength());
                 logger.info("Recebido: " + data);
                 logger.info("Tamanho: " + data.length());
                 InetAddress IPReceived = receivedPacket.getAddress();
