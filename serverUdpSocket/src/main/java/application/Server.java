@@ -9,6 +9,7 @@ import java.net.*;
 public class Server {
 
     static String port;
+    static String logFile;
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     static DatagramSocket serverSocket;
     static byte[] receivedData = new byte[1480];
@@ -17,7 +18,9 @@ public class Server {
 
     public static void main(String args[]) {
         port = ApplicationProperties.getInstance().loadProperties().getProperty("site.port");
+        logFile = ApplicationProperties.getInstance().loadProperties().getProperty("log.file");
         logger.info("Porta: " + port);
+        new ProcessThread(logFile).run();
         try {
             serverSocket = new DatagramSocket(Integer.parseInt(port));
             while(true) {
