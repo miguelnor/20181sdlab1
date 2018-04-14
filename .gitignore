@@ -1,6 +1,4 @@
 serverUdpSocket/target
 serverUdpSocket/serverUdpSocket.iml
-serverUdpSocket/.idea
 clientUdpSocket/target
 clientUdpSocket/clientUdpSocket.iml
-clientUdpSocket/.idea
