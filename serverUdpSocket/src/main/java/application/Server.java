@@ -2,6 +2,8 @@ package application;
 
 import application.configuration.ApplicationProperties;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.logging.Logger;
 import java.util.LinkedList;
 import java.net.*;
@@ -22,6 +24,8 @@ public class Server {
         logger.info("Porta: " + port);
         new ProcessThread(logFile).run();
         try {
+            FileWriter fileWriter = new FileWriter(logFile);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             serverSocket = new DatagramSocket(Integer.parseInt(port));
             while(true) {
                 DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
@@ -33,6 +37,8 @@ public class Server {
                 int portReceived = receivedPacket.getPort();
                 logger.info("De: " + IPReceived + ":" + portReceived);
                 processQueue.add(new Process(data,IPReceived,portReceived));
+                bufferedWriter.write(data);
+                bufferedWriter.newLine();
             }
         } catch (Exception e) {
             e.printStackTrace();
