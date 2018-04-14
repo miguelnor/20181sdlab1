@@ -3,6 +3,7 @@ package application;
 import application.configuration.ApplicationProperties;
 
 import java.util.logging.Logger;
+import java.util.LinkedList;
 import java.net.*;
 
 public class Server {
@@ -12,6 +13,7 @@ public class Server {
     static DatagramSocket serverSocket;
     static byte[] receivedData = new byte[1480];
     static byte[] sendData = new byte[1480];
+    static LinkedList<String> processQueue = new LinkedList<>();
 
 
     public static void main(String args[]) {
@@ -28,6 +30,7 @@ public class Server {
                 InetAddress IPReceived = receivedPacket.getAddress();
                 int portReceived = receivedPacket.getPort();
                 logger.info("De: " + IPReceived + ":" + portReceived);
+                processQueue.add(data);
             }
         } catch (Exception e) {
             e.printStackTrace();
