@@ -24,14 +24,17 @@ public class ProcessThread extends Thread {
 
     public ProcessThread(String logFile) {
         this.logFile = logFile;
+        logger.info("logFile: " + this.logFile);
     }
 
     @Override
     public void run() {
         processLogFile();
+        logger.info("Iniciando atendimento da fila...");
         while (true) {
             Process process = Server.processQueue.poll();
             if (process != null) {
+                logger.info("processando requisicao da fila...");
                 String[] splited = process.getRequest().split("'");
                 String CRUD = splited[0];
                 BigInteger key = new BigInteger(splited[1]);
@@ -40,12 +43,25 @@ public class ProcessThread extends Thread {
                     processCUD(CRUD, key, value);
                 else {
                     try {
+                        logger.info("processando READ " + key);
                         processReply(key.toString() + " : " + mapRead(key), process);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
+            }else{
+                try {
+                    Thread.sleep(2000);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
+            if(process != null){
+                System.out.println(process.getRequest());
+            }else{
+                System.out.println("null");
+            }
+
         }
     }
 
@@ -54,11 +70,12 @@ public class ProcessThread extends Thread {
 
         DatagramSocket clientSocket = new DatagramSocket();
         DatagramPacket sendPackage = new DatagramPacket(sendData, sendData.length, process.getClient(), process.getPort());
-
+        logger.info("enviando resposta para o cliente " + process.getClient() +":" + process.getPort() + " " + data);
         clientSocket.send(sendPackage);
     }
 
     private boolean processCUD(String crud, BigInteger key, String value) {
+        logger.info("processando CUD " + crud + key + value);
         switch (crud) {
             case CREATE:
                 return mapCreate(key, value);
@@ -93,6 +110,7 @@ public class ProcessThread extends Thread {
     }
 
     private void processLogFile() {
+        logger.info("processando logFile na inicializacao");
         String command;
         try {
             FileReader fileReader = new FileReader(logFile);

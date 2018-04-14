@@ -22,12 +22,14 @@ public class Server {
         port = ApplicationProperties.getInstance().loadProperties().getProperty("site.port");
         logFile = ApplicationProperties.getInstance().loadProperties().getProperty("log.file");
         logger.info("Porta: " + port);
-        new ProcessThread(logFile).run();
+        new ProcessThread(logFile).start();
+        logger.info("Passou da thread");
         try {
             FileWriter fileWriter = new FileWriter(logFile);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             serverSocket = new DatagramSocket(Integer.parseInt(port));
             while(true) {
+                logger.info("Esperando recebimento...");
                 DatagramPacket receivedPacket = new DatagramPacket(receivedData, receivedData.length);
                 serverSocket.receive(receivedPacket);
                 String data = new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength());
@@ -37,6 +39,7 @@ public class Server {
                 int portReceived = receivedPacket.getPort();
                 logger.info("De: " + IPReceived + ":" + portReceived);
                 processQueue.add(new Process(data,IPReceived,portReceived));
+                logger.info("Requisicao inserida na fila...");
                 bufferedWriter.write(data);
                 bufferedWriter.newLine();
             }

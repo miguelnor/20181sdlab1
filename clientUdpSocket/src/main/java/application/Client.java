@@ -62,6 +62,9 @@ public class Client {
         String message = scan.nextLine();
         String request = code+"'"+key+"'"+message;
 
+
+        logger.info("Request: " + request);
+
         byte[] sendData = request.getBytes();
 
         DatagramSocket clientSocket = new DatagramSocket();
