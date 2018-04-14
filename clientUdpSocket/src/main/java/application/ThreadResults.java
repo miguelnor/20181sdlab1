@@ -14,7 +14,7 @@ public class ThreadResults extends Thread{
 
     @Override
     public void run(){
-        if(result.contains("1")||result.contains("3")) {
+        if(result.contains("1")||result.contains("2")) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
