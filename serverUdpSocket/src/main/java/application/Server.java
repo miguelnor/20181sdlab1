@@ -12,8 +12,7 @@ public class Server {
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     static DatagramSocket serverSocket;
     static byte[] receivedData = new byte[1480];
-    static byte[] sendData = new byte[1480];
-    static LinkedList<String> processQueue = new LinkedList<>();
+    static LinkedList<Process> processQueue = new LinkedList<>();
 
 
     public static void main(String args[]) {
@@ -30,7 +29,7 @@ public class Server {
                 InetAddress IPReceived = receivedPacket.getAddress();
                 int portReceived = receivedPacket.getPort();
                 logger.info("De: " + IPReceived + ":" + portReceived);
-                processQueue.add(data);
+                processQueue.add(new Process(data,IPReceived,portReceived));
             }
         } catch (Exception e) {
             e.printStackTrace();

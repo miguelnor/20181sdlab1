@@ -24,9 +24,9 @@ public class ProcessThread extends Thread {
     public void run() {
         processLogFile();
         while(true){
-            String process = Server.processQueue.poll();
+            Process process = Server.processQueue.poll();
             if(process != null){
-                String[] splited = process.split("'");
+                String[] splited = process.getRequest().split("'");
                 String CRUD = splited[0];
                 BigInteger key = new BigInteger(splited[1]);
                 String value = splited[2];
