@@ -12,7 +12,42 @@ import java.net.*;
 
 public class Client {
 
+    static String port;
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    static DatagramSocket clientSocket;
+    static DatagramPacket sendPackage;
+
+
+    public static void main(String args[]) throws Exception {
+        Scanner scan = new Scanner(System.in);
+        logger.setLevel(Level.FINE);
+        port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port"));
+        InetAddress IPAddress = InetAddress.getByName("localhost");
+
+        logger.info("Server address: " + IPAddress + ":" + port);
+
+        //--Montando requisição---
+        Client.menu();
+        String code = Client.chooseOption();
+        String key = Client.verifyKeyOfCode(code);
+        String message = scan.nextLine();
+        String request = code+"'"+key+"'"+message;
+
+        logger.info("Request: " + request);
+
+        byte[] sendData = request.getBytes();
+
+        clientSocket = new DatagramSocket();
+        sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, Integer.parseInt(port));
+
+        clientSocket.send(sendPackage);
+        logger.info("Enviado: " + sendData);
+        logger.info("Tamanho: " + request.length());
+
+//        for (int i = 0; i < 4; i++) {
+//            new ThreadResults("Thread " + i).start();
+//        }
+    }
 
     public static void menu() {
         Menu[] menu = Menu.values();
@@ -46,37 +81,4 @@ public class Client {
             return key;
         }
     }
-
-    public static void main(String args[]) throws Exception {
-        Scanner scan = new Scanner(System.in);
-        logger.setLevel(Level.FINE);
-        int port = Integer.parseInt(ApplicationProperties.getInstance().loadProperties().getProperty("server.port"));
-        InetAddress IPAddress = InetAddress.getByName("localhost");
-
-        logger.info("Server address: " + IPAddress + ":" + port);
-
-        //--Montando requisição---
-        Client.menu();
-        String code = Client.chooseOption();
-        String key = Client.verifyKeyOfCode(code);
-        String message = scan.nextLine();
-        String request = code+"'"+key+"'"+message;
-
-
-        logger.info("Request: " + request);
-
-        byte[] sendData = request.getBytes();
-
-        DatagramSocket clientSocket = new DatagramSocket();
-        DatagramPacket sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-
-        clientSocket.send(sendPackage);
-        logger.info("Enviado: " + sendData);
-        logger.info("Tamanho: " + request.length());
-
-//        for (int i = 0; i < 4; i++) {
-//            new ThreadResults("Thread " + i).start();
-//        }
-    }
-
 }
