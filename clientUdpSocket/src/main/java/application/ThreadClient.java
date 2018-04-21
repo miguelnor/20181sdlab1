@@ -8,15 +8,18 @@ public class ThreadClient extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Escutando");
         while(true) {
             DatagramPacket receivedPacket = new DatagramPacket(receiveData,receiveData.length);
             try {
+                System.out.println("Escutando");
                 Client.clientSocket.receive(receivedPacket);
+                System.out.println("Escutando");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if(receivedPacket.getData() != null) {
-                String response = new String(receivedPacket.getData());
+                String response = new String(receivedPacket.getData(), receivedPacket.getOffset(), receivedPacket.getLength());
                 System.out.println("Response: " + response);
                 break;
             }

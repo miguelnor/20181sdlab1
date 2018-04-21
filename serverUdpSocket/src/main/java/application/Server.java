@@ -11,6 +11,7 @@ import java.net.*;
 public class Server {
 
     static String port;
+    static String portClient;
     static String logFile;
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     static DatagramSocket serverSocket;
@@ -21,6 +22,7 @@ public class Server {
 
     public static void main(String args[]) {
         port = ApplicationProperties.getInstance().loadProperties().getProperty("site.port");
+        portClient =  ApplicationProperties.getInstance().loadProperties().getProperty("client.port");
         logFile = ApplicationProperties.getInstance().loadProperties().getProperty("log.file");
         logger.info("Porta: " + port);
         new ProcessThread(logFile).start();

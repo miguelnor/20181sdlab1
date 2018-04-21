@@ -2,8 +2,6 @@ package application;
 
 import application.configuration.ApplicationProperties;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -13,16 +11,22 @@ import java.net.*;
 public class Client {
 
     static String port;
+    static String portClient;
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     static DatagramSocket clientSocket;
     static DatagramPacket sendPackage;
 
     public static void main(String args[]) throws Exception {
+        port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port");
+        portClient =  ApplicationProperties.getInstance().loadProperties().getProperty("client.port");
+        clientSocket = new DatagramSocket(Integer.parseInt(portClient));
+        logger.info("Porta: " + clientSocket.getPort());
+        logger.info("Porta: " + portClient);
+
         Thread t1 = new ThreadClient();
         t1.start();
         Scanner scan = new Scanner(System.in);
         logger.setLevel(Level.FINE);
-        port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port");
         InetAddress IPAddress = InetAddress.getByName("localhost");
 
         logger.info("Server address: " + IPAddress + ":" + port);
@@ -40,17 +44,20 @@ public class Client {
         byte[] sendData = request.getBytes();
         sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, Integer.parseInt(port));
         clientSocket = new DatagramSocket();
+
         clientSocket.send(sendPackage);
 
         logger.info("Enviado: " + sendData);
         logger.info("Tamanho: " + request.length());
         logger.info("Request: " + request);
+        logger.info("Porta: " + clientSocket.getPort());
         try{
             t1.join();
         }
         catch (Exception e){
             e.printStackTrace();
         }
+        while(true){}
     }
 
     public static void menu() {

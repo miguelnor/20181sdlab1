@@ -69,7 +69,7 @@ public class ProcessThread extends Thread {
         byte[] sendData = data.getBytes();
 
         DatagramSocket clientSocket = new DatagramSocket();
-        DatagramPacket sendPackage = new DatagramPacket(sendData, sendData.length, process.getClient(), process.getPort());
+        DatagramPacket sendPackage = new DatagramPacket(sendData, sendData.length, process.getClient(), Integer.parseInt(Server.portClient));
         logger.info("enviando resposta para o cliente " + process.getClient() +":" + process.getPort() + " " + data);
         clientSocket.send(sendPackage);
     }
