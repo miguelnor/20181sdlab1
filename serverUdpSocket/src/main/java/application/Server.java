@@ -14,6 +14,7 @@ public class Server {
     static String logFile;
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     static DatagramSocket serverSocket;
+    static FileWriter fileWriter;
     static byte[] receivedData = new byte[1480];
     static LinkedList<Process> processQueue = new LinkedList<>();
 
@@ -25,7 +26,6 @@ public class Server {
         new ProcessThread(logFile).start();
         logger.info("Passou da thread");
         try {
-            FileWriter fileWriter = new FileWriter(logFile);
             //BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             serverSocket = new DatagramSocket(Integer.parseInt(port));
             while(true) {
@@ -40,9 +40,19 @@ public class Server {
                 logger.info("De: " + IPReceived + ":" + portReceived);
                 processQueue.add(new Process(data,IPReceived,portReceived));
                 logger.info("Requisicao inserida na fila...");
-                fileWriter.write(data+System.getProperty( "line.separator"));
+                writeOnFile(logFile,data);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void writeOnFile(String file, String data){
+        try {
+            fileWriter = new FileWriter(file, true);
+            fileWriter.write(data+System.getProperty( "line.separator"));
+            fileWriter.close();
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
