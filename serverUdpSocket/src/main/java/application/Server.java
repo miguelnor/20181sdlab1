@@ -39,7 +39,9 @@ public class Server {
                 InetAddress IPReceived = receivedPacket.getAddress();
                 int portReceived = receivedPacket.getPort();
                 logger.info("De: " + IPReceived + ":" + portReceived);
-                processQueue.add(new Process(data,IPReceived,portReceived));
+                synchronized (processQueue) {
+                    processQueue.add(new Process(data, IPReceived, portReceived));
+                }
                 logger.info("Requisicao inserida na fila...");
                 if(data.charAt(0) != '2')
                     writeOnFile(logFile,data);

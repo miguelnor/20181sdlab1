@@ -19,8 +19,9 @@ public class Client {
     public static void main(String args[]) throws Exception {
         port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port");
         portClient =  ApplicationProperties.getInstance().loadProperties().getProperty("client.port");
-        clientSocket = new DatagramSocket(Integer.parseInt(portClient));
-        logger.info("Porta: " + clientSocket.getPort());
+
+        //clientSocket = new DatagramSocket(Integer.parseInt(portClient));
+
         logger.info("Porta: " + portClient);
 
         Thread t1 = new ThreadClient();
@@ -30,34 +31,28 @@ public class Client {
         InetAddress IPAddress = InetAddress.getByName("localhost");
 
         logger.info("Server address: " + IPAddress + ":" + port);
+        while(true) {
+            //--Montando requisição---
+            Client.menu();
+            String code = Client.chooseOption();
+            System.out.print("Key: ");
+            BigInteger key = scan.nextBigInteger();
+            String message = readMessage(code);
+            String request = code + "'" + key + "'" + message + "'";
+            System.out.print(request);
 
-        //--Montando requisição---
-        Client.menu();
-        String code = Client.chooseOption();
-        System.out.print("Key: ");
-        BigInteger key = scan.nextBigInteger();
-        String message = readMessage(code) ;
-        String request = code + "'" + key + "'" + message +"'";
-        System.out.print(request);
+            //Enviando o pacote contendo os bytes dos comandos para o servidor.
+            byte[] sendData = request.getBytes();
+            sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, Integer.parseInt(port));
+            clientSocket = new DatagramSocket();
 
-        //Enviando o pacote contendo os bytes dos comandos para o servidor.
-        byte[] sendData = request.getBytes();
-        sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, Integer.parseInt(port));
-        clientSocket = new DatagramSocket();
+            clientSocket.send(sendPackage);
 
-        clientSocket.send(sendPackage);
+            logger.info("Enviado: " + sendData);
+            logger.info("Tamanho: " + request.length());
+            logger.info("Request: " + request);
 
-        logger.info("Enviado: " + sendData);
-        logger.info("Tamanho: " + request.length());
-        logger.info("Request: " + request);
-        logger.info("Porta: " + clientSocket.getPort());
-        try{
-            t1.join();
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        while(true){}
     }
 
     public static void menu() {

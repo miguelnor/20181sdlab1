@@ -32,7 +32,10 @@ public class ProcessThread extends Thread {
         processLogFile();
         logger.info("Iniciando atendimento da fila...");
         while (true) {
-            Process process = Server.processQueue.poll();
+            Process process;
+            synchronized (Server.processQueue) {
+                process = Server.processQueue.poll();
+            }
             if (process != null) {
                 logger.info("processando requisicao da fila...");
                 String[] splited = process.getRequest().split("'");
@@ -49,19 +52,7 @@ public class ProcessThread extends Thread {
                         e.printStackTrace();
                     }
                 }
-            }else{
-                try {
-                    Thread.sleep(2000);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
             }
-            if(process != null){
-                System.out.println(process.getRequest());
-            }else{
-                System.out.println("null");
-            }
-
         }
     }
 
