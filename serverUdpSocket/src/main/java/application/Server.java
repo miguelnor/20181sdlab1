@@ -2,7 +2,6 @@ package application;
 
 import application.configuration.ApplicationProperties;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.logging.Logger;
 import java.util.LinkedList;
@@ -42,7 +41,8 @@ public class Server {
                 logger.info("De: " + IPReceived + ":" + portReceived);
                 processQueue.add(new Process(data,IPReceived,portReceived));
                 logger.info("Requisicao inserida na fila...");
-                writeOnFile(logFile,data);
+                if(data.charAt(0) != '2')
+                    writeOnFile(logFile,data);
             }
         } catch (Exception e) {
             e.printStackTrace();
