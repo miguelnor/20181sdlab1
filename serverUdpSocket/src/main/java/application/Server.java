@@ -26,7 +26,7 @@ public class Server {
         logger.info("Passou da thread");
         try {
             FileWriter fileWriter = new FileWriter(logFile);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            //BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             serverSocket = new DatagramSocket(Integer.parseInt(port));
             while(true) {
                 logger.info("Esperando recebimento...");
@@ -40,8 +40,7 @@ public class Server {
                 logger.info("De: " + IPReceived + ":" + portReceived);
                 processQueue.add(new Process(data,IPReceived,portReceived));
                 logger.info("Requisicao inserida na fila...");
-                bufferedWriter.write(data);
-                bufferedWriter.newLine();
+                fileWriter.write(data+System.getProperty( "line.separator"));
             }
         } catch (Exception e) {
             e.printStackTrace();
