@@ -20,8 +20,6 @@ public class Client {
         port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port");
         portClient =  ApplicationProperties.getInstance().loadProperties().getProperty("client.port");
 
-        //clientSocket = new DatagramSocket(Integer.parseInt(portClient));
-
         logger.info("Porta: " + portClient);
 
         Thread t1 = new ThreadClient();
