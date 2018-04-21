@@ -18,6 +18,7 @@ public class Client {
     static DatagramPacket sendPackage;
 
     public static void main(String args[]) throws Exception {
+        new ThreadClient().start();
         Scanner scan = new Scanner(System.in);
         logger.setLevel(Level.FINE);
         port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port");
@@ -33,20 +34,16 @@ public class Client {
         String message = readMessage(code) ;
         String request = code + "'" + key + "'" + message;
         System.out.print(request);
-        logger.info("Request: " + request);
 
+        //Enviando o pacote contendo os bytes dos comandos para o servidor.
         byte[] sendData = request.getBytes();
-
-        clientSocket = new DatagramSocket();
         sendPackage = new DatagramPacket(sendData, sendData.length, IPAddress, Integer.parseInt(port));
-
+        clientSocket = new DatagramSocket();
         clientSocket.send(sendPackage);
+
         logger.info("Enviado: " + sendData);
         logger.info("Tamanho: " + request.length());
-
-//        for (int i = 0; i < 4; i++) {
-//            new ThreadResults("Thread " + i).start();
-//        }
+        logger.info("Request: " + request);
     }
 
     public static void menu() {
@@ -80,7 +77,6 @@ public class Client {
         }
         return "";
     }
-
 
     public static BigInteger chooseKey() {
         Scanner scan = new Scanner(System.in);
