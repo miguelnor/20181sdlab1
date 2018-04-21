@@ -17,11 +17,10 @@ public class Client {
     static DatagramSocket clientSocket;
     static DatagramPacket sendPackage;
 
-
     public static void main(String args[]) throws Exception {
         Scanner scan = new Scanner(System.in);
         logger.setLevel(Level.FINE);
-        port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port"));
+        port = ApplicationProperties.getInstance().loadProperties().getProperty("server.port");
         InetAddress IPAddress = InetAddress.getByName("localhost");
 
         logger.info("Server address: " + IPAddress + ":" + port);
@@ -29,10 +28,15 @@ public class Client {
         //--Montando requisição---
         Client.menu();
         String code = Client.chooseOption();
-        String key = Client.verifyKeyOfCode(code);
-        String message = scan.nextLine();
-        String request = code+"'"+key+"'"+message;
-
+        System.out.print("Key: ");
+        BigInteger key = scan.nextBigInteger();
+        String message = "";
+        if(code.equals("1") || code.equals("3")) {
+            System.out.print("Message: ");
+            message = scan.nextLine();
+        }
+        String request = code + "'" + key + "'" + message;
+        System.out.print(request);
         logger.info("Request: " + request);
 
         byte[] sendData = request.getBytes();
@@ -52,15 +56,18 @@ public class Client {
     public static void menu() {
         Menu[] menu = Menu.values();
         System.out.println("----Choose an code option----");
-        for(Menu m: menu) {
-            System.out.printf("%d) %s%n", m.ordinal() + 1, m);
+        for (Menu m : menu) {
+            System.out.printf("%d) %s%n", m.ordinal() + 1, m.name());
         }
+        System.out.print("Option: ");
     }
 
     public static String chooseOption() {
         int code = 0;
         Scanner scan = new Scanner(System.in);
+        code = scan.nextInt();
         while (code < 1 || code > 4) {
+            System.out.println("----Choose an valid option----");
             Client.menu();
             code = scan.nextInt();
         }
@@ -71,14 +78,5 @@ public class Client {
         Scanner scan = new Scanner(System.in);
         BigInteger code = scan.nextBigInteger();
         return code;
-    }
-
-    public static String verifyKeyOfCode(String code) {
-        if (code.equals(2) || code.equals(4)) {
-            return " ";
-        } else {
-            String key = Client.chooseKey().toString();
-            return key;
-        }
     }
 }
