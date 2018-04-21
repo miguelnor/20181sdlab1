@@ -30,11 +30,7 @@ public class Client {
         String code = Client.chooseOption();
         System.out.print("Key: ");
         BigInteger key = scan.nextBigInteger();
-        String message = "";
-        if(code.equals("1") || code.equals("3")) {
-            System.out.print("Message: ");
-            message = scan.nextLine();
-        }
+        String message = readMessage(code) ;
         String request = code + "'" + key + "'" + message;
         System.out.print(request);
         logger.info("Request: " + request);
@@ -73,6 +69,18 @@ public class Client {
         }
         return Integer.toString(code);
     }
+
+    public static String readMessage(String code){
+        Scanner scan = new Scanner(System.in);
+        String M;
+        if(code.equals("1") || code.equals("3")){
+            System.out.print("Message: ");
+            M = scan.nextLine();
+            return M;
+        }
+        return "";
+    }
+
 
     public static BigInteger chooseKey() {
         Scanner scan = new Scanner(System.in);
