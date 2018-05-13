@@ -10,6 +10,7 @@ import java.net.*;
 public class Server {
 
     static String port;
+    static String grpcPort;
     static String portClient;
     static String logFile;
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -21,12 +22,14 @@ public class Server {
 
     public static void main(String args[]) {
         port = ApplicationProperties.getInstance().loadProperties().getProperty("site.port");
+        grpcPort = ApplicationProperties.getInstance().loadProperties().getProperty("grpc.port");
         portClient =  ApplicationProperties.getInstance().loadProperties().getProperty("client.port");
         logFile = ApplicationProperties.getInstance().loadProperties().getProperty("log.file");
         logger.info("Porta: " + port);
         new ProcessThread(logFile).start();
         logger.info("Passou da thread");
         try {
+            new ProcessServerThread(Integer.parseInt(grpcPort)).start();
             //BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             serverSocket = new DatagramSocket(Integer.parseInt(port));
             while(true) {
@@ -40,7 +43,7 @@ public class Server {
                 int portReceived = receivedPacket.getPort();
                 logger.info("De: " + IPReceived + ":" + portReceived);
                 synchronized (processQueue) {
-                    processQueue.add(new Process(data, IPReceived, portReceived));
+                    processQueue.add(new Process(data, IPReceived, portReceived, false));
                 }
                 logger.info("Requisicao inserida na fila...");
                 if(data.charAt(0) != '2')

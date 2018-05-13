@@ -6,11 +6,13 @@ public class Process {
     private String request;
     private InetAddress client;
     private int port;
+    private boolean grpc;
 
-    public Process(String request, InetAddress client, int port){
+    public Process(String request, InetAddress client, int port, boolean grpc){
         this.client = client;
         this.port = port;
         this.request = request;
+        this.grpc = grpc;
     }
 
     public String getRequest() {
@@ -35,5 +37,13 @@ public class Process {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public boolean isGrpc() {
+        return grpc;
+    }
+
+    public void setGrpc(boolean grpc) {
+        this.grpc = grpc;
     }
 }

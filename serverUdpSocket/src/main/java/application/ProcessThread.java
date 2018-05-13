@@ -96,8 +96,11 @@ public class ProcessThread extends Thread {
     }
 
     private boolean mapCreate(BigInteger key, String value) {
-        mapa.put(key, value);
-        return true;
+        if(!mapa.containsKey(key)) {
+            mapa.put(key, value);
+            return true;
+        }
+        return false;
     }
 
     private void processLogFile() {
